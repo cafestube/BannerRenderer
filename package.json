@@ -15,5 +15,8 @@
   "license": "ISC",
   "dependencies": {
     "typescript": "^4.8.2"
+  },
+  "publishConfig": {
+    "registry": "https://repo.cafestu.be/repository/npm-private/"
   }
 }
