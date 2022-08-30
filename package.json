@@ -1,22 +1,19 @@
 {
-  "name": "minecraft-banner-renderer",
-  "version": "1.0.0",
-  "description": "",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "/dist"
-  ],
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "typescript": "^4.8.2"
-  },
-  "publishConfig": {
-    "registry": "https://repo.cafestu.be/repository/npm-private/"
-  }
+    "name": "@cafestube/minecraft-banner-renderer",
+    "version": "1.0.1",
+    "description": "",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "/dist"
+    ],
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "tsc"
+    },
+    "author": "",
+    "license": "LGPL",
+    "dependencies": {
+        "typescript": "^4.8.2"
+    }
 }
