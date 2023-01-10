@@ -1,9 +1,15 @@
 {
     "name": "@cafestube/minecraft-banner-renderer",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
+    
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/cafestube/BannerRenderer.git"
+    },
+      
     "files": [
         "/dist"
     ],
