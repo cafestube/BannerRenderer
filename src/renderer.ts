@@ -13,8 +13,6 @@ export function render2d(
     throw Error("No base pattern found");
   }
 
-  console.log(atlas);
-
   var wasSmooth = context.imageSmoothingEnabled;
   context.imageSmoothingEnabled = false;
   patterns.forEach((pattern) => {

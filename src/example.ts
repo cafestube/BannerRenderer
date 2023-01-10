@@ -13,7 +13,6 @@ async function init() {
   atlasImage.src = "/example/atlas.png";
 
   atlasImage.onload = function () {
-    console.log("hi");
     render2d(
       ctx,
       [
