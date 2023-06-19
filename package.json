@@ -20,6 +20,6 @@
     "author": "",
     "license": "LGPL",
     "dependencies": {
-        "typescript": "^4.8.2"
+        "typescript": "^5.0.0"
     }
 }
