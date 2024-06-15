@@ -11,7 +11,7 @@ import java.nio.file.Path
 import java.util.zip.ZipFile
 
 
-fun downloadAndExtractPatterns(destination: Path, patterns: List<BannerPattern>) {
+fun downloadAndExtractPatterns(destination: Path) {
     val tmp = Files.createTempDirectory("atlas-generator")
     println("Fetching Minecraft Versions")
     val clientUrl = fetchNewestMinecraftClient()
@@ -21,15 +21,13 @@ fun downloadAndExtractPatterns(destination: Path, patterns: List<BannerPattern>)
     println("Extracting Patterns")
 
     ZipFile(client.toFile()).use {
-        patterns.forEach { pattern ->
-            val entry = it.getEntry("assets/minecraft/textures/entity/banner/${pattern.fileName}")
-                ?: throw IllegalStateException("Missing banner pattern ${pattern.fileName}")
-
-            val image = it.getInputStream(entry).readAllBytes()
-            FileOutputStream(destination.resolve(pattern.fileName).toFile()).use {
-                it.write(image)
+        for (entry in it.entries()) {
+            if(entry.name.startsWith("assets/minecraft/textures/entity/banner/")) {
+                val image = it.getInputStream(entry).readAllBytes()
+                FileOutputStream(destination.resolve(entry.name.replaceFirst("assets/minecraft/textures/entity/banner/", ""))
+                    .toFile()).use { stream -> stream.write(image) }
+                println("Extracted ${entry.name}")
             }
-            println("Extracted ${pattern.fileName}")
         }
     }
 }

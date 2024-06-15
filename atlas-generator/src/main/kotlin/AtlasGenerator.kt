@@ -5,25 +5,26 @@ import java.awt.image.BufferedImage
 import java.nio.file.Files
 import java.nio.file.Path
 import javax.imageio.ImageIO
-import kotlin.math.max
+import kotlin.io.path.deleteExisting
+import kotlin.io.path.listDirectoryEntries
+import kotlin.io.path.nameWithoutExtension
 import kotlin.math.min
 
 fun main() {
     val path = Path.of("patterns")
-    if(!Files.exists(path))
-        Files.createDirectories(path)
+    deleteRecursive(path)
+    Files.createDirectories(path)
 
-    val needsDownload = BannerPattern.values().filter { !Files.exists(path.resolve(it.fileName)) }
-    if(needsDownload.isNotEmpty()) {
-        println("Downloading ${needsDownload.size} patterns")
-        downloadAndExtractPatterns(path, needsDownload)
-    }
+    downloadAndExtractPatterns(path)
+
+    val patternList = path.listDirectoryEntries(glob = "*.png")
+        .map { "minecraft:${it.nameWithoutExtension}" }
+        .toList()
 
     val textureWidth = 64
     val textureHeight = 64
 
-    println(BannerPattern.values().size)
-    val atlasWidth = textureWidth * BannerPattern.values().size
+    val atlasWidth = textureWidth * patternList.size
     val atlasHeight = textureHeight * DyeColor.values().size
 
     val bufferedImage = BufferedImage(atlasWidth, atlasHeight, BufferedImage.TYPE_INT_ARGB)
@@ -34,21 +35,22 @@ fun main() {
 
 
     val atlasData = JsonObject()
+    println("Generating Atlas for ${patternList.size} patterns and ${DyeColor.values().size} colors")
 
 
     DyeColor.values().forEach { color ->
         val patterns = JsonObject()
 
-        BannerPattern.values().forEach { pattern ->
+        patternList.forEach { pattern ->
 
-            var image = ImageIO.read(Files.newInputStream(path.resolve(pattern.fileName)))
+            var image = ImageIO.read(Files.newInputStream(path.resolve(pattern.substringAfter(":") + ".png")))
 
             if(color != DyeColor.WHITE) {
                 image = tint(image, color.color)
             }
             graphics.drawImage(image, xOffset, yOffset, null)
 
-            patterns.add(pattern.name, JsonObject().apply {
+            patterns.add(pattern, JsonObject().apply {
                 addProperty("x", xOffset)
                 addProperty("y", yOffset)
                 //addProperty("width", textureWidth)
@@ -68,6 +70,13 @@ fun main() {
         it.write(atlasData.toString().toByteArray())
     }
     ImageIO.write(bufferedImage, "png", Files.newOutputStream(Path.of("atlas.png")))
+}
+
+private fun deleteRecursive(path: Path) {
+    if(Files.isDirectory(path)) {
+        Files.list(path).forEach { deleteRecursive(it) }
+    }
+    Files.deleteIfExists(path)
 }
 
 fun tint(input: BufferedImage, color: Color): BufferedImage {
